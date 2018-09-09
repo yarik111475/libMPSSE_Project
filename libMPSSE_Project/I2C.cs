@@ -83,24 +83,28 @@ namespace libMPSSE_Project {
                 I2C_TRANSFER_OPTIONS_START_BIT |
                 I2C_TRANSFER_OPTIONS_STOP_BIT);
 
+            APP_CHECK_STATUS(status);
+
             while (!writeCompleted && retry < I2C_READ_WRITE_COMPLETION_RETRY) {
                 bytesToTransfer = 0;
                 bytesTransfered = 0;
                 buffer = new byte[3];
 
-                buffer[bytesToTransfer++] = (byte)(deviceAddress >> 8);
                 buffer[bytesToTransfer++] = (byte)deviceAddress;
+                buffer[bytesToTransfer++] = (byte)(deviceAddress >> 8);
                 buffer[bytesToTransfer++] = data;
 
                 status |= I2C_DeviceWrite(handle, slaveAddress, bytesToTransfer, buffer, ref bytesTransfered,
                     I2C_TRANSFER_OPTIONS_START_BIT |
-                    I2C_TRANSFER_OPTIONS_BREAK_ON_NACK);
+                    I2C_TRANSFER_OPTIONS_NACK_LAST_BYTE);
 
                 if (status == FT_STATUS.FT_OK & bytesTransfered == bytesToTransfer) {
                     writeCompleted = true;
                 }
                 retry++;
             }
+            APP_CHECK_STATUS(status);
+
             return status;
         }
 
@@ -110,8 +114,8 @@ namespace libMPSSE_Project {
             uint bytesTransfered = 0;
             byte[] buffer = new byte[2];
 
-            buffer[bytesToTransfer++] = (byte)(deviceAddress >> 8);
             buffer[bytesToTransfer++] = (byte)deviceAddress;
+            buffer[bytesToTransfer++] = (byte)(deviceAddress >> 8);
 
             status = I2C_DeviceWrite(handle, slaveAddress, bytesToTransfer, buffer, ref bytesTransfered,
                 I2C_TRANSFER_OPTIONS_START_BIT);
@@ -122,7 +126,7 @@ namespace libMPSSE_Project {
             bytesTransfered = 0;
             buffer = new byte[1];
             status |= I2C_DeviceRead(handle, slaveAddress, bytesToTransfer, buffer, ref bytesTransfered,
-                I2C_TRANSFER_OPTIONS_START_BIT);
+                I2C_TRANSFER_OPTIONS_START_BIT | I2C_TRANSFER_OPTIONS_NACK_LAST_BYTE);
 
             APP_CHECK_STATUS(status);
 
