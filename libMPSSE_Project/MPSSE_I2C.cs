@@ -5,8 +5,8 @@ using System.Text;
 using System.Runtime.InteropServices;
 
 namespace libMPSSE_Project {
-    public class I2C {
-        IntPtr handle = IntPtr.Zero;
+    public partial class  MPSSE {
+        
         private const uint I2C_READ_WRITE_COMPLETION_RETRY = 10;
 
         private const uint I2C_TRANSFER_OPTIONS_START_BIT = 0x01;           //00000001
@@ -17,56 +17,22 @@ namespace libMPSSE_Project {
         private const uint I2C_TRANSFER_OPTIONS_FAST_TRANSFER_BITS = 0x20;  //00100000
         private const uint I2C_TRANSFER_OPTIONS_NO_ADDRESS = 0x40;          //01000000
 
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_GetNumChannels", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_GetNumChannels(ref uint NumChannels);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_GetChannelInfo", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_GetChannelInfo(uint index, ref FT_DEVICE_LIST_INFO_NODE chanInfo);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_OpenChannel", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_OpenChannel(uint index, ref IntPtr handle);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_InitChannel", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_InitChannel(IntPtr handler, ref ChannelConfig config);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_CloseChannel", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_CloseChannel(IntPtr handle);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_DeviceRead", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_DeviceRead(IntPtr handle, uint deviceAddress, uint sizeToTransfer,
-            byte[] buffer, ref uint sizeTransfered, uint options);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "I2C_DeviceWrite", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS I2C_DeviceWrite(IntPtr handle, uint deviceAddress, uint sizeToTransfer,
-            byte[] buffer, ref uint sizeTransfered, uint options);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "Init_libMPSSE", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Init_libMPSSE();
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "Cleanup_libMPSSE", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Cleanup_libMPSSE();
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "FT_WriteGPIO", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS FT_WriteGPIO(IntPtr handle, byte dir, byte value);
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "FT_ReadGPIO", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS FT_ReadGPIO(IntPtr handle, ref byte value);
-
-        public FT_STATUS Init(uint channel) {
+        
+        public FT_STATUS I2C_Init(uint channel) {
             FT_STATUS status = FT_STATUS.FT_OK;
-            ChannelConfig channelConfig= new ChannelConfig();
-            channelConfig.ClockRate = I2C_CLOCKRATE.I2C_CLOCK_STANDARD_MODE;
+            I2C_ChannelConfig channelConfig= new I2C_ChannelConfig();
+            channelConfig.ClockRate = I2C_SPI_CLOCKRATE.I2C_CLOCK_STANDARD_MODE;
             channelConfig.LatencyTimer = 255;
             channelConfig.Options = 3;
 
             Init_libMPSSE();
 
             status |= I2C_OpenChannel(channel, ref handle);
-            status |= I2C_InitChannel(handle, ref channelConfig);
+            status |= I2C_InitChannel(handle, out channelConfig);
             return status;
         }
 
-        public FT_STATUS WriteByte(byte slaveAddress, uint deviceAddress, byte data) {
+        public FT_STATUS I2C_WriteByte(byte slaveAddress, uint deviceAddress, byte data) {
             FT_STATUS status = FT_STATUS.FT_OK;
             uint bytesToTransfer = 0;
             uint bytesTransfered = 0;
@@ -108,7 +74,7 @@ namespace libMPSSE_Project {
             return status;
         }
 
-        public FT_STATUS ReadByte(byte slaveAddress, uint deviceAddress, ref byte data) {
+        public FT_STATUS I2C_ReadByte(byte slaveAddress, uint deviceAddress, ref byte data) {
             FT_STATUS status = FT_STATUS.FT_OK;
             uint bytesToTransfer = 0;
             uint bytesTransfered = 0;
@@ -134,7 +100,7 @@ namespace libMPSSE_Project {
             return status;
         }
 
-        public FT_STATUS Close() {
+        public FT_STATUS I2C_Close() {
             FT_STATUS status = FT_STATUS.FT_OK;
             if (handle != IntPtr.Zero) {
                 status = I2C_CloseChannel(handle);
@@ -143,15 +109,11 @@ namespace libMPSSE_Project {
             return status;
         }
 
-        static void APP_CHECK_STATUS(FT_STATUS status) {
-            if (status != FT_STATUS.FT_OK) {
-                Console.WriteLine("Error: {0}", status.ToString());
-            }
-        }
+        
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct ChannelConfig {
-            public I2C_CLOCKRATE ClockRate;
+        public struct I2C_ChannelConfig {
+            public libMPSSE_Project.I2C_SPI_CLOCKRATE ClockRate;
             public uint LatencyTimer;
             public uint Options;
         }
