@@ -14,7 +14,7 @@ namespace libMPSSE_Project {
             //FT_DEVICE_LIST_INFO_NODE listInfo = new FT_DEVICE_LIST_INFO_NODE();
             //status |= I2C.I2C_GetChannelInfo(0, ref listInfo);
 
-            byte[] inBuffer = new byte[0x10];// File.ReadAllBytes(@"C:\BWD 129 (ALL)_283321400510_6401.bin");
+            byte[] inBuffer = new byte[0x100];// File.ReadAllBytes(@"C:\BWD 129 (ALL)_283321400510_6401.bin");
             //Console.WriteLine("writing...");
 
             //for (int i = 0; i < inBuffer.Length; i++) {
@@ -30,7 +30,6 @@ namespace libMPSSE_Project {
             }
             i2c.Close();
 
-            File.WriteAllBytes("test.bin", outBuffer);
 
             Console.WriteLine("Completed...");
             Console.ReadLine();

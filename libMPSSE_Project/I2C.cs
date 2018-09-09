@@ -88,8 +88,8 @@ namespace libMPSSE_Project {
                 bytesTransfered = 0;
                 buffer = new byte[3];
 
-                buffer[bytesToTransfer++] = (byte)deviceAddress;
                 buffer[bytesToTransfer++] = (byte)(deviceAddress >> 8);
+                buffer[bytesToTransfer++] = (byte)deviceAddress;
                 buffer[bytesToTransfer++] = data;
 
                 status |= I2C_DeviceWrite(handle, slaveAddress, bytesToTransfer, buffer, ref bytesTransfered,
@@ -110,8 +110,8 @@ namespace libMPSSE_Project {
             uint bytesTransfered = 0;
             byte[] buffer = new byte[2];
 
-            buffer[bytesToTransfer++] = (byte)deviceAddress;
             buffer[bytesToTransfer++] = (byte)(deviceAddress >> 8);
+            buffer[bytesToTransfer++] = (byte)deviceAddress;
 
             status = I2C_DeviceWrite(handle, slaveAddress, bytesToTransfer, buffer, ref bytesTransfered,
                 I2C_TRANSFER_OPTIONS_START_BIT);
