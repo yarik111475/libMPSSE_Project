@@ -64,6 +64,9 @@ namespace libMPSSE_Project {
 
         [DllImportAttribute("libMPSSE.dll", EntryPoint = "SPI_ToggleCS", CallingConvention = CallingConvention.Cdecl)]
         public static extern FT_STATUS SPI_ToggleCS(IntPtr handle, bool state);
+
+        [DllImportAttribute("libMPSSE.dll", EntryPoint = "SPI_ChangeCS", CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT_STATUS SPI_ChangeCS(IntPtr handle, uint configOptions);
         #endregion
 
         #region COMMON
@@ -72,9 +75,6 @@ namespace libMPSSE_Project {
 
         [DllImportAttribute("libMPSSE.dll", EntryPoint = "Cleanup_libMPSSE", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Cleanup_libMPSSE();
-
-        [DllImportAttribute("libMPSSE.dll", EntryPoint = "SPI_ChangeCS", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_STATUS SPI_ChangeCS(IntPtr handle, uint configOptions);
 
         [DllImportAttribute("libMPSSE.dll", EntryPoint = "FT_WriteGPIO", CallingConvention = CallingConvention.Cdecl)]
         public static extern FT_STATUS FT_WriteGPIO(IntPtr handle, byte dir, byte value);
