@@ -122,7 +122,7 @@ namespace libMPSSE_Project {
             bytesTransfered = 0;
             buffer = new byte[1];
             status |= I2C_DeviceRead(handle, slaveAddress, bytesToTransfer, buffer, ref bytesTransfered,
-                I2C_TRANSFER_OPTIONS_START_BIT | I2C_TRANSFER_OPTIONS_STOP_BIT);
+                I2C_TRANSFER_OPTIONS_START_BIT);
 
             APP_CHECK_STATUS(status);
 
