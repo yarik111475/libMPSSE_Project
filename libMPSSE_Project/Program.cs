@@ -23,7 +23,7 @@ namespace libMPSSE_Project {
             //Console.WriteLine("writing...");
 
             //for (int i = 0; i < inBuffer.Length; i++) {
-            //    status |= mpsse.I2C_WriteByte(0x50, (uint)i, 0xDD);
+            //    status |= mpsse.I2C_WriteByte(0x50, (uint)i, 0xFE);
             //}
 
             Console.WriteLine("reading...");

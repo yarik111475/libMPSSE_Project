@@ -108,14 +108,5 @@ namespace libMPSSE_Project {
             Cleanup_libMPSSE();
             return status;
         }
-
-        
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct I2C_ChannelConfig {
-            public libMPSSE_Project.I2C_SPI_CLOCKRATE ClockRate;
-            public uint LatencyTimer;
-            public uint Options;
-        }
     }
 }
